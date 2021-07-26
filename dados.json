@@ -1,1 +1,82 @@
-[]
+[
+    {
+        "Title": "Lenovo IdeaPad Miix 510 Platinum Silver",
+        "Price": "$1212.16"
+    },
+    {
+        "Title": "Lenovo Legion Y520",
+        "Price": "$1133.91"
+    },
+    {
+        "Title": "Lenovo Legion Y520-15IKBM",
+        "Price": "$1112.91"
+    },
+    {
+        "Title": "Lenovo Legion Y520-15IKBM",
+        "Price": "$1149.00"
+    },
+    {
+        "Title": "Lenovo Legion Y720",
+        "Price": "$1399.00"
+    },
+    {
+        "Title": "Lenovo ThinkPad E31-80",
+        "Price": "$404.23"
+    },
+    {
+        "Title": "Lenovo ThinkPad L460",
+        "Price": "$1096.02"
+    },
+    {
+        "Title": "Lenovo ThinkPad L570",
+        "Price": "$999.00"
+    },
+    {
+        "Title": "Lenovo ThinkPad T470",
+        "Price": "$1349.23"
+    },
+    {
+        "Title": "Lenovo ThinkPad Yoga 370 Black",
+        "Price": "$1362.24"
+    },
+    {
+        "Title": "Lenovo V110-15IAP",
+        "Price": "$321.94"
+    },
+    {
+        "Title": "Lenovo V110-15IAP",
+        "Price": "$356.49"
+    },
+    {
+        "Title": "Lenovo V110-15IKB",
+        "Price": "$465.95"
+    },
+    {
+        "Title": "Lenovo V110-15ISK",
+        "Price": "$409.63"
+    },
+    {
+        "Title": "Lenovo V110-15ISK",
+        "Price": "$454.73"
+    },
+    {
+        "Title": "Lenovo V510 Black",
+        "Price": "$484.23"
+    },
+    {
+        "Title": "Lenovo V510 Black",
+        "Price": "$487.80"
+    },
+    {
+        "Title": "Lenovo V510 Black",
+        "Price": "$498.23"
+    },
+    {
+        "Title": "Lenovo Yoga 720 Grey",
+        "Price": "$1149.73"
+    },
+    {
+        "Title": "Lenovo Yoga 910 Grey",
+        "Price": "$1199.73"
+    }
+]

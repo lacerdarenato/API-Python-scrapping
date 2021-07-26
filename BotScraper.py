@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 import requests
 
-url = 'https://webscraper.io/test-sitess/e-commerce/allinone/computers/laptops'
+url = 'https://webscraper.io/test-sites/e-commerce/allinone/computers/laptops'
 
 try:
     html = requests.get(url)
@@ -17,11 +17,11 @@ else:
 
     elementsPrices = soup.find_all("h4", class_="pull-right price")
     elementsTitles = soup.find_all("a", attrs={"class": "title"})
-    
+
     prices = []
     titles = []
     notebooks = []
-    searched = 'Asus'
+    searched = 'Lenovo'
 
     for price in elementsPrices:
         prices.append(price.text)
@@ -33,6 +33,7 @@ else:
         notebooks.append({"Title": titles[i], "Price": prices[i]})
 
     notebookFiltrado = [notebook for notebook in notebooks if notebook['Title'].count(searched)]
+    notebookInOrder = sorted(notebookFiltrado, key=lambda notebook: notebook['Title'])
 
     with open('dados.json', 'w') as json_file:    
-        json.dump(notebookFiltrado, json_file, indent=4)
+        json.dump(notebookInOrder, json_file, indent=4)
