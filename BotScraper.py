@@ -35,5 +35,10 @@ else:
     notebookFiltrado = [notebook for notebook in notebooks if notebook['Title'].count(searched)]
     notebookInOrder = sorted(notebookFiltrado, key=lambda notebook: notebook['Title'])
 
-    with open('dados.json', 'w') as json_file:    
+    try: 
+        json_file = open('dados.json', 'w')
+    except OSError as err:
+        print("OS Error: {0}".format(err))
+    else:     
         json.dump(notebookInOrder, json_file, indent=4)
+        json_file.close()
