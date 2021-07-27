@@ -1,5 +1,4 @@
 import json
-from warnings import catch_warnings
 from bs4 import BeautifulSoup
 
 import requests
@@ -16,24 +15,39 @@ else:
     soup = BeautifulSoup(html.content, 'html.parser')
 
     elementsPrices = soup.find_all("h4", class_="pull-right price")
+    elementsDescriptions = soup.find_all("p", class_="description")
     elementsTitles = soup.find_all("a", attrs={"class": "title"})
+    elementsReviews = soup.find_all("p", class_="pull-right") 
+    elementsRatings = soup.find_all("div", class_="ratings")# conferir pq não funciona? ("p", attrs={"class": "data-rating"})
 
     prices = []
+    descriptions = []
     titles = []
+    ratings = []
+    reviews = []
     notebooks = []
     searched = 'Lenovo'
 
     for price in elementsPrices:
-        prices.append(price.text)
+        prices.append(float(price.text[1:]))
+
+    for description in elementsDescriptions:
+        descriptions.append(description.text)
 
     for title in elementsTitles:
         titles.append(title.get('title'))
+    
+    for review in elementsReviews:
+        reviews.append(review.text)
+
+    for rating in elementsRatings:
+        ratings.append(rating.get('data-rating'))
 
     for i in range(0, len(elementsPrices)-1):
-        notebooks.append({"Title": titles[i], "Price": prices[i]})
+        notebooks.append({"Title": titles[i], "Price": prices[i], "Description": descriptions[i], "Review": reviews[i], "Ratings": ratings[i]}) #, "Ratings": ratings[i]
 
     notebookFiltrado = [notebook for notebook in notebooks if notebook['Title'].count(searched)]
-    notebookInOrder = sorted(notebookFiltrado, key=lambda notebook: notebook['Title'])
+    notebookInOrder = sorted(notebookFiltrado, key=lambda notebook: notebook['Price'])
 
     try: 
         json_file = open('dados.json', 'w')
