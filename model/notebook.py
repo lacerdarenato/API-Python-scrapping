@@ -1,5 +1,4 @@
 from model.data import alchemy
-
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 
 class NotebookModel(alchemy.Model):

@@ -66,8 +66,6 @@ def persist_json():
                                             review=notebookitem['review'])
         #print(type(notebookitem))
         newNotebook.save_to_db()
-        if newNotebook.title in json: #como achar um dict dentro de uma lista????
-            print('encontrou')
 
     return "Json do scraping salvo"
 
