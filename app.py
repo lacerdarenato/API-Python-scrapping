@@ -1,7 +1,6 @@
 from flask import Flask, json, jsonify, request
 from model.data import alchemy
-from flask_sqlalchemy import SQLAlchemy
-from flask.wrappers import Response, Request
+
 from model import notebook
 
 
@@ -13,16 +12,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:12345678@localhost/dbNoteb
 @app.before_first_request
 def create_tables():
     alchemy.create_all()
-
-db = SQLAlchemy(app)
-
-class Notebook(db.Model):
-    id = db.Column(db.Integer, primary_key= True)
-    price = db.Column(db.Float)
-    description = db.Column(db.String(200))
-    title = db.Column(db.String(50))
-    rating = db.Column(db.Integer)
-    review = db.Column(db.String(20))
 
 '''evitar duplicados testar
 

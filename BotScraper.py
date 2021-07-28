@@ -1,6 +1,6 @@
-import json
 from bs4 import BeautifulSoup
 
+import json
 import requests
 
 url = 'https://webscraper.io/test-sites/e-commerce/allinone/computers/laptops'
