@@ -3,56 +3,59 @@ from bs4 import BeautifulSoup
 import json
 import requests
 
-url = 'https://webscraper.io/test-sites/e-commerce/allinone/computers/laptops'
+def scraping(searched):
+    url = 'https://webscraper.io/test-sites/e-commerce/allinone/computers/laptops'
 
-try:
-    html = requests.get(url)
-    html.status_code == 200
-    html.raise_for_status()
-except requests.exceptions.HTTPError as err:
-    raise SystemExit(err)
-else:
-    soup = BeautifulSoup(html.content, 'html.parser')
+    try:
+        html = requests.get(url)
+        html.status_code == 200
+        html.raise_for_status()
 
-    elementsPrices = soup.find_all("h4", class_="pull-right price")
-    elementsDescriptions = soup.find_all("p", class_="description")
-    elementsTitles = soup.find_all("a", attrs={"class": "title"})
-    elementsReviews = soup.find_all("p", class_="pull-right") 
-    elementsRatings = soup.find_all("div", class_="ratings")# conferir pq não funciona? ("p", attrs={"class": "data-rating"})
+        soup = BeautifulSoup(html.content, 'html.parser')
 
-    prices = []
-    descriptions = []
-    titles = []
-    ratings = []
-    reviews = []
-    notebooks = []
-    searched = 'Lenovo'
+        elementsPrices = soup.find_all("h4", class_="pull-right price")
+        elementsDescriptions = soup.find_all("p", class_="description")
+        elementsTitles = soup.find_all("a", attrs={"class": "title"})
+        elementsReviews = soup.find_all("p", class_="pull-right") 
+        elementsRatings = soup.find_all("div", class_="ratings")# conferir pq não funciona? ("p", attrs={"class": "data-rating"})
 
-    for price in elementsPrices:
-        prices.append(float(price.text[1:]))
+        prices = []
+        descriptions = []
+        titles = []
+        ratings = []
+        reviews = []
+        notebooks = []
 
-    for description in elementsDescriptions:
-        descriptions.append(description.text)
+        for price in elementsPrices:
+            prices.append(float(price.text[1:]))
 
-    for title in elementsTitles:
-        titles.append(title.get('title'))
-    
-    for review in elementsReviews:
-        reviews.append(review.text)
+        for description in elementsDescriptions:
+            descriptions.append(description.text)
 
-    for rating in elementsRatings:
-        ratings.append(rating.get('data-rating'))
+        for title in elementsTitles:
+            titles.append(title.get('title'))
+        
+        for review in elementsReviews:
+            reviews.append(review.text)
 
-    for i in range(0, len(elementsPrices)-1):
-        notebooks.append({"title": titles[i], "price": prices[i], "description": descriptions[i], "review": reviews[i], "rating": 0}) #, "Ratings": ratings[i]
+        for rating in elementsRatings:
+            ratings.append(rating.get('data-rating'))
 
-    notebookFiltrado = [notebook for notebook in notebooks if notebook['title'].count(searched)]
-    notebookInOrder = sorted(notebookFiltrado, key=lambda notebook: notebook['price'])
+        for i in range(0, len(elementsPrices)-1):
+            notebooks.append({"title": titles[i], "price": prices[i], "description": descriptions[i], "review": reviews[i], "rating": 0}) #, "Ratings": ratings[i]
 
-    try: 
-        json_file = open('dados.json', 'w')
-    except OSError as err:
-        print("OS Error: {0}".format(err))
-    else:     
-        json.dump(notebookInOrder, json_file, indent=4)
-        json_file.close()
+        notebookFiltrado = [notebook for notebook in notebooks if notebook['title'].count(searched)]
+        notebookInOrder = sorted(notebookFiltrado, key=lambda notebook: notebook['price'])
+
+        try: 
+            json_file = open('dados.json', 'w')
+            json.dump(notebookInOrder, json_file, indent=4)
+            json_file.close()
+        except OSError as err:
+            print("OS Error: {0}".format(err))
+
+        return "Encontrado " + searched + " via scraping"
+            
+        
+    except requests.exceptions.HTTPError as err:
+        raise SystemExit(err)

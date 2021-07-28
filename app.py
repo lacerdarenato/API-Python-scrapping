@@ -1,5 +1,6 @@
 from flask import Flask, json, jsonify, request
 from model.data import alchemy
+from BotScraper import scraping
 
 from model import notebook
 
@@ -42,10 +43,13 @@ def home():
 def getNotebooks():
     return jsonify(openJson())
 
+@app.route('/scrap')
+def bot():
+    return scraping('Lenovo')
+
 @app.route('/salva', methods=['GET'])
 def persistJson():
     json = openJson()
-    #print(type(json))
     
     for notebookitem in json:
         newNotebook = notebook.NotebookModel(title=notebookitem['title'],

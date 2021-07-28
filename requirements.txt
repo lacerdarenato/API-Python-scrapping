@@ -3,3 +3,4 @@ flask_sqlalchemy
 mysql-connector-python
 BeautifulSoup4
 flask-marshmallow
+requests
