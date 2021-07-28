@@ -44,10 +44,10 @@ else:
         ratings.append(rating.get('data-rating'))
 
     for i in range(0, len(elementsPrices)-1):
-        notebooks.append({"Title": titles[i], "Price": prices[i], "Description": descriptions[i], "Review": reviews[i], "Ratings": ratings[i]}) #, "Ratings": ratings[i]
+        notebooks.append({"title": titles[i], "price": prices[i], "description": descriptions[i], "review": reviews[i], "rating": 0}) #, "Ratings": ratings[i]
 
-    notebookFiltrado = [notebook for notebook in notebooks if notebook['Title'].count(searched)]
-    notebookInOrder = sorted(notebookFiltrado, key=lambda notebook: notebook['Price'])
+    notebookFiltrado = [notebook for notebook in notebooks if notebook['title'].count(searched)]
+    notebookInOrder = sorted(notebookFiltrado, key=lambda notebook: notebook['price'])
 
     try: 
         json_file = open('dados.json', 'w')
