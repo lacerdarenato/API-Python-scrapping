@@ -24,7 +24,7 @@ def create_tables():
     FROM DUAL
     WHERE NOT EXISTS(SELECT login FROM usuarios WHERE login = '$valor_que_nao_pode_duplicar')";
 '''
-def openJson():
+def open_json():
     try: 
         json_file = open('dados.json', 'r')
         data = json_file.read()
@@ -40,16 +40,23 @@ def home():
     return "Bem vindo a API de notebooks com Web Scraping", 200
 
 @app.route('/listar',methods=['GET'])
-def getNotebooks():
-    return jsonify(openJson())
+def get_notebooks():
+    return jsonify(open_json())
+
+@app.route('/listar/<int:id>')
+def get_notebook_by_id(id):
+    result = notebook.NotebookModel.find_by_id(id)
+    if result:
+        return result.json()
+    return {'message':'Notebook não encotrado'}, 404
 
 @app.route('/scrap')
-def bot():
+def execute_bot():
     return scraping('Lenovo')
 
 @app.route('/salva', methods=['GET'])
-def persistJson():
-    json = openJson()
+def persist_json():
+    json = open_json()
     
     for notebookitem in json:
         newNotebook = notebook.NotebookModel(title=notebookitem['title'],
