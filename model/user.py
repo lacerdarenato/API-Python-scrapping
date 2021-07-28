@@ -1,21 +1,21 @@
-from data import alchemy
+from model.data import alchemy
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema 
 
 class UserModel(alchemy.Model):
     __tablename__ = 'user'
 
     id = alchemy.Column(alchemy.Integer, primary_key=True)
-    username = alchemy.Column(alchemy.String(50), unique=True)
-    email = alchemy.Column(alchemy.String(50), unique=True)
-    password = alchemy.Column(alchemy.String(50))
+    name = alchemy.Column(alchemy.String(100), nullable=False)
+    email = alchemy.Column(alchemy.String(100), nullable=False, unique=True)
+    password = alchemy.Column(alchemy.String(110), nullable=False)
 
-    def __init__(self, username, email, password):
-        self.username = username
+    def __init__(self, name, email, password):
+        self.name = name
         self.email = email
         self.password = password
     
     def json(self):
-        return {'username': self.username, 'email': self.email, 'password': self.password}
+        return {'name': self.name, 'email': self.email, 'password': self.password}
     
     def save_to_db(self):
         alchemy.session.add(self)
@@ -26,8 +26,8 @@ class UserModel(alchemy.Model):
         alchemy.session.commit()
     
     @classmethod
-    def find_by_username(cls, username):
-        return cls.query.filter_by(username=username).first()
+    def find_by_name(cls, name):
+        return cls.query.filter_by(name=name).first()
     
     @classmethod
     def find_by_id(cls, id):

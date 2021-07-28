@@ -1,9 +1,9 @@
 from flask import Flask, json, jsonify, request
 from model.data import alchemy
 from BotScraper import scraping
-
-from model import notebook
-
+from model import notebook, user
+from werkzeug.security import generate_password_hash
+from validate_email import validate_email
 
 app = Flask(__name__)
 
@@ -15,10 +15,6 @@ def create_tables():
     alchemy.create_all()
 
 '''evitar duplicados testar
-
-    https://www.imaginarycloud.com/blog/flask-python/
-    https://realpython.com/flask-connexion-rest-api/
-
     $query = "INSERT INTO usuarios(login, senha) 
     SELECT '$login_que_nao_pode_duplicar', 123456 
     FROM DUAL
@@ -69,6 +65,18 @@ def persist_json():
 
     return "Json do scraping salvo"
 
+@app.route('/signup', methods=['POST'])
+def signup():
+    request_data = request.get_json()
+    name = request_data['name']
+    email = request_data['email']
+    password = request_data['password']
+    if validate_email(email):
+        new_user = user.UserModel(name, email, generate_password_hash(password))
+        new_user.save_to_db()
+        return jsonify(new_user.json())
+    else:
+        return {'message':'Email invalido'}, 400
 
 if __name__ == '__main__':
     from model.data import alchemy, ma
