@@ -1,14 +1,20 @@
+from os import access, name
 from flask import Flask, json, jsonify, request
 from model.data import alchemy
 from BotScraper import scraping
 from model import notebook, user
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import create_access_token, jwt_required
 from validate_email import validate_email
+from datetime import timedelta
 
 app = Flask(__name__)
 
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:12345678@localhost/dbNotebooks'
+app.config['JWT_SECRET_KEY'] = 'YMujEXUERyR9Zgixpa6iEDFfypQ'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=10)
 
 @app.before_first_request
 def create_tables():
@@ -47,10 +53,12 @@ def get_notebook_by_id(id):
     return {'message':'Notebook não encotrado'}, 404
 
 @app.route('/scrap')
+@jwt_required()
 def execute_bot():
     return scraping('Lenovo')
 
 @app.route('/salva', methods=['GET'])
+@jwt_required()
 def persist_json():
     json = open_json()
     
@@ -76,10 +84,22 @@ def signup():
         new_user.save_to_db()
         return jsonify(new_user.json())
     else:
-        return {'message':'Email invalido'}, 400
+        return {'message':'Email invalido'}, 401
+
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.json.get('email')
+    password = request.json.get('password')
+    result = user.UserModel.find_by_email(email)
+    if result and check_password_hash(result.password, password):
+        access_token = create_access_token(identity=email)
+        return jsonify(access_token=access_token)
+
+    return {"message":"Usuario ou senha invalidos"}, 401
 
 if __name__ == '__main__':
-    from model.data import alchemy, ma
+    from model.data import alchemy, ma, jwt
     alchemy.init_app(app)
     ma.init_app(ma)
-    app.run(port=5000, debug=True),
+    jwt.init_app(app)
+    app.run(port=5000, debug=True)

@@ -4,3 +4,5 @@ mysql-connector-python
 BeautifulSoup4
 flask-marshmallow
 requests
+validate_email
+flask_jwt_extended

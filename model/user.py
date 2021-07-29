@@ -26,8 +26,8 @@ class UserModel(alchemy.Model):
         alchemy.session.commit()
     
     @classmethod
-    def find_by_name(cls, name):
-        return cls.query.filter_by(name=name).first()
+    def find_by_email(cls, email):
+        return cls.query.filter_by(email=email).first()
     
     @classmethod
     def find_by_id(cls, id):
