@@ -12,16 +12,17 @@ def scraping(searched):
         html.raise_for_status()
 
         soup = BeautifulSoup(html.content, 'html.parser')
-
         elementsPrices = soup.find_all("h4", class_="pull-right price")
         elementsDescriptions = soup.find_all("p", class_="description")
         elementsTitles = soup.find_all("a", attrs={"class": "title"})
         elementsReviews = soup.find_all("p", class_="pull-right") 
         elementsRatings = soup.find_all("div", class_="ratings")# conferir pq não funciona? ("p", attrs={"class": "data-rating"})
 
+
         prices = []
         descriptions = []
         titles = []
+        productIds = []
         ratings = []
         reviews = []
         notebooks = []
@@ -34,6 +35,7 @@ def scraping(searched):
 
         for title in elementsTitles:
             titles.append(title.get('title'))
+            productIds.append(int(title.get('href').split('/')[-1]))
         
         for review in elementsReviews:
             reviews.append(review.text)
@@ -42,7 +44,7 @@ def scraping(searched):
             ratings.append(rating.get('data-rating'))
 
         for i in range(0, len(elementsPrices)-1):
-            notebooks.append({"title": titles[i], "price": prices[i], "description": descriptions[i], "review": reviews[i], "rating": 0}) #, "Ratings": ratings[i]
+            notebooks.append({"productId": productIds[i], "title": titles[i], "price": prices[i], "description": descriptions[i], "review": reviews[i], "rating": 0}) #, "Ratings": ratings[i]
 
         notebookFiltrado = [notebook for notebook in notebooks if notebook['title'].count(searched)]
         notebookInOrder = sorted(notebookFiltrado, key=lambda notebook: notebook['price'])

@@ -53,25 +53,29 @@ def get_notebook_by_id(id):
     return {'message':'Notebook não encotrado'}, 404
 
 @app.route('/scrap')
-@jwt_required()
+#@jwt_required()
 def execute_bot():
     return scraping('Lenovo')
 
 @app.route('/salva', methods=['GET'])
-@jwt_required()
+#@jwt_required()
 def persist_json():
     json = open_json()
     
-    for notebookitem in json:
-        newNotebook = notebook.NotebookModel(title=notebookitem['title'],
-                                            price=notebookitem['price'],
-                                            description=notebookitem['description'],
-                                            rating=notebookitem['rating'],
-                                            review=notebookitem['review'])
-        #print(type(notebookitem))
-        newNotebook.save_to_db()
+    for notebookItem in json:
+        if notebook.NotebookModel.find_by_product_id(productId=notebookItem['productId']):
+            print('Item {} já existe no banco!'.format(notebookItem['productId']))
+            
+        else:
+            newNotebook = notebook.NotebookModel(   productId=notebookItem['productId'],
+                                                    title=notebookItem['title'],
+                                                    price=notebookItem['price'],
+                                                    description=notebookItem['description'],
+                                                    rating=notebookItem['rating'],
+                                                    review=notebookItem['review'])
+            newNotebook.save_to_db()
 
-    return "Json do scraping salvo"
+    return {"message":"Json do scraping salvo no banco"}, 200
 
 @app.route('/signup', methods=['POST'])
 def signup():
