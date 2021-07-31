@@ -1,6 +1,5 @@
 from model.data import alchemy
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema 
-
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 class UserModel(alchemy.Model):
     __tablename__ = 'user'
 
@@ -8,11 +7,14 @@ class UserModel(alchemy.Model):
     name = alchemy.Column(alchemy.String(100), nullable=False)
     email = alchemy.Column(alchemy.String(100), nullable=False, unique=True)
     password = alchemy.Column(alchemy.String(110), nullable=False)
+    
+    #cart_id = alchemy.Column(alchemy.Integer, alchemy.ForeignKey('cart.id'))
 
-    def __init__(self, name, email, password):
+    def __init__(self, name, email, password, cart_id): 
         self.name = name
         self.email = email
         self.password = password
+        self.cart_id = cart_id 
     
     def json(self):
         return {'name': self.name, 'email': self.email, 'password': self.password}

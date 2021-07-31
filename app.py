@@ -1,14 +1,20 @@
-from os import access, name
 from flask import Flask, json, jsonify, request
 from model.data import alchemy
 from BotScraper import scraping
-from model import notebook, user
+from model import notebook, user, cart
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required
 from validate_email import validate_email
 from datetime import timedelta
+from flask_restx import Api, Namespace
 
 app = Flask(__name__)
+api = Api(  app, 
+            version='1.0',
+            title='Api de notebooks', 
+            description='Apenas uma api com scraping de dados de notebooks', 
+            doc='/docs'
+        )
 
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
@@ -20,12 +26,6 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=10)
 def create_tables():
     alchemy.create_all()
 
-'''evitar duplicados testar
-    $query = "INSERT INTO usuarios(login, senha) 
-    SELECT '$login_que_nao_pode_duplicar', 123456 
-    FROM DUAL
-    WHERE NOT EXISTS(SELECT login FROM usuarios WHERE login = '$valor_que_nao_pode_duplicar')";
-'''
 def open_json():
     try: 
         json_file = open('dados.json', 'r')
@@ -36,16 +36,19 @@ def open_json():
     except OSError as err:
         print("OS Error: {0}".format(err))
         return "Erro ao carregar arquivo json", 404
+
+ns_notebook = api.namespace('notebook', description="operações com notebooks")
         
 @app.route('/', methods=['GET'])
 def home():
-    return "Bem vindo a API de notebooks com Web Scraping", 200
+    return "Bem-vindo a API de notebooks com Web Scraping", 200
 
-@app.route('/listar',methods=['GET'])
+@app.route('/notebook',methods=['GET'])
 def get_notebooks():
     return jsonify(open_json())
 
-@app.route('/listar/<int:id>')
+#@ns_notebook.route('/<int:id>')
+@app.route('/notebook/<int:id>')
 def get_notebook_by_id(id):
     result = notebook.NotebookModel.find_by_id(id)
     if result:
@@ -101,6 +104,17 @@ def login():
 
     return {"message":"Usuario ou senha invalidos"}, 401
 
+@app.route('/notebook/<int:id>/comprar', methods=['POST'])
+def create_notebook_in_cart(id):
+    request_data = request.get_json()
+    parent =  notebook.NotebookModel.find_by_id(id)
+    print(parent)
+    if parent:
+        new_cart =  cart.CartModel(quantity=request_data['quantity'], notebook_id=parent.id)
+        new_cart.save_to_db()
+        return new_cart.json()
+    else:
+        return  {'message': 'Carrinho não encontrado!'}, 404
 if __name__ == '__main__':
     from model.data import alchemy, ma, jwt
     alchemy.init_app(app)
