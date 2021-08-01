@@ -20,7 +20,7 @@ api = Api(  app,
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:12345678@localhost/dbNotebooks'
 app.config['JWT_SECRET_KEY'] = 'YMujEXUERyR9Zgixpa6iEDFfypQ'
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=10)
+#app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=10)
 
 @app.before_first_request
 def create_tables():
@@ -56,12 +56,12 @@ def get_notebook_by_id(id):
     return {'message':'Notebook não encotrado'}, 404
 
 @app.route('/scrap')
-#@jwt_required()
+@jwt_required()
 def execute_bot():
     return scraping('Lenovo')
 
 @app.route('/salva', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def persist_json():
     json = open_json()
     
@@ -87,9 +87,12 @@ def signup():
     email = request_data['email']
     password = request_data['password']
     if validate_email(email):
-        new_user = user.UserModel(name, email, generate_password_hash(password))
-        new_user.save_to_db()
-        return jsonify(new_user.json())
+        if user.UserModel.find_by_email(email):
+            return {'message':'Email ja cadastrado'}, 200
+        else:
+            new_user = user.UserModel(name, email, generate_password_hash(password))
+            new_user.save_to_db()
+            return jsonify(new_user.json())
     else:
         return {'message':'Email invalido'}, 401
 

@@ -56,7 +56,7 @@ def scraping(searched):
         except OSError as err:
             print("OS Error: {0}".format(err))
 
-        return "Encontrado " + searched + " via scraping"
+        return {"message":"Encontrado " + searched + " via scraping"}, 200
             
         
     except requests.exceptions.HTTPError as err:

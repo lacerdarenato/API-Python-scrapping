@@ -9,11 +9,11 @@ class CartModel(alchemy.Model):
     id = alchemy.Column(alchemy.Integer, primary_key=True)
     quantity = alchemy.Column(alchemy.Integer, nullable=False)
     #user_id = alchemy.relationship(user.UserModel, lazy='dynamic')
-    notebook_id = alchemy.relationship(notebook.NotebookModel, lazy='dynamic')
+    #notebook_id = alchemy.relationship(notebook.NotebookModel, lazy='dynamic')
 
     def __init__(self, quantity, notebook_id):
         self.quantity = quantity
-        self.notebook_id = notebook_id
+        #self.notebook_id = notebook_id
 
     def save_to_db(self):
         alchemy.session.add(self)

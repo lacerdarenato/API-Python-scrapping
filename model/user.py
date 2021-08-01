@@ -10,11 +10,11 @@ class UserModel(alchemy.Model):
     
     #cart_id = alchemy.Column(alchemy.Integer, alchemy.ForeignKey('cart.id'))
 
-    def __init__(self, name, email, password, cart_id): 
+    def __init__(self, name, email, password): #cart_id
         self.name = name
         self.email = email
         self.password = password
-        self.cart_id = cart_id 
+        #self.cart_id = cart_id 
     
     def json(self):
         return {'name': self.name, 'email': self.email, 'password': self.password}

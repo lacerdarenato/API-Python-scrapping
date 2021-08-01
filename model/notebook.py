@@ -10,16 +10,17 @@ class NotebookModel(alchemy.Model):
     price = alchemy.Column(alchemy.Float)
     description = alchemy.Column(alchemy.String(200))
     rating = alchemy.Column(alchemy.Integer)
-    cart_id = alchemy.Column(alchemy.Integer, alchemy.ForeignKey('cart.id'))
+    review = alchemy.Column(alchemy.String(40))
+    #cart_id = alchemy.Column(alchemy.Integer, alchemy.ForeignKey('cart.id'))
 
-    def __init__(self, productId, title, price, description, rating, review, cart_id):
+    def __init__(self, productId, title, price, description, rating, review): #cart_id
         self.productId = productId
         self.title = title
         self.price = price
         self.description = description
         self.rating = rating
         self.review = review
-        self.cart_id = cart_id
+        #self.cart_id = cart_id
     
     def json(self):
         return {'id':self.id, "productId": self.productId, 'title':self.title, 'price':self.price, 'description':self.description, 'rating':self.rating, 'review':self.review}
