@@ -28,6 +28,23 @@ class NotebookModel(alchemy.Model):
         alchemy.session.add(self)
         alchemy.session.commit()
 
+    def remove_from_db(self):
+        alchemy.session.delete(self)
+        alchemy.session.commit()
+    
+    @classmethod
+    def update_item(cls, self):
+        newNotebook = NotebookModel.query.filter_by(productId=self['productId']).first()
+        
+        newNotebook.productId = self['productId']
+        newNotebook.title = self['title']
+        newNotebook.price = self['price']
+        newNotebook.description = self['description']
+        newNotebook.rating = self['rating']
+        newNotebook.review = self['review']
+        
+        alchemy.session.commit()
+        
     @classmethod
     def find_by_product_id(cls, productId):
         return cls.query.filter_by(productId=productId).first()

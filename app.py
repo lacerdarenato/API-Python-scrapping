@@ -47,12 +47,31 @@ def home():
 def get_notebooks():
     return jsonify(open_json())
 
-@app.route('/notebook/<int:id>')
+@app.route('/notebook/<int:productId>', methods=['GET'])
 @jwt_required()
-def get_notebook_by_id(id):
-    result = notebook.NotebookModel.find_by_id(id)
+def get_notebook_by_product_id(productId):
+    result = notebook.NotebookModel.find_by_product_id(productId)
     if result:
         return result.json()
+    return {'message':'Notebook não encotrado'}, 404
+
+@app.route('/notebook/<int:productId>', methods=['DELETE'])
+@jwt_required()
+def del_notebook_by_product_id(productId):
+    result = notebook.NotebookModel.find_by_product_id(productId)
+    if result:
+        notebook.NotebookModel.remove_from_db(result)
+        return {'message':'Notebook removido com sucesso'}, 200
+    return {'message':'Notebook não encotrado'}, 404
+
+@app.route('/notebook/<int:productId>', methods=['PATCH'])
+@jwt_required()
+def change_notebook_by_product_id(productId):
+    result = notebook.NotebookModel.find_by_product_id(productId)
+    if result:
+        request_data = request.get_json()
+        notebook.NotebookModel.update_item(request_data)
+        return request_data, 200
     return {'message':'Notebook não encotrado'}, 404
 
 @app.route('/scrap')
@@ -77,6 +96,26 @@ def persist_json():
             newNotebook.save_to_db()
 
     return {"message":"Json do scraping salvo no banco"}, 200
+
+@app.route('/notebook/comprar', methods=['POST'])
+@jwt_required()
+def create_notebook_list_in_cart():
+    request_data = request.get_json()
+    notebook_list = request_data['list_to_buy']
+
+    for item in notebook_list:
+        found = notebook.NotebookModel.find_by_product_id(item['notebook_id'])
+        if found:
+            new_cart = cart_item.CartItemModel(quantity=item['quantity'],
+                                                    notebook_id=found.id,
+                                                    user_id=request_data['user_id'])
+            new_cart.add_to_session()
+        else:
+            return {'message': 'Notebook {} nao existe no banco!'.format(item['notebook_id'])}, 403
+
+    new_cart.save_to_db()
+
+    return {'message': 'Notebooks inseridos com sucesso!'}, 200
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -104,26 +143,6 @@ def login():
         return jsonify(access_token=access_token)
 
     return {"message":"Usuario ou senha invalidos"}, 401
-
-@app.route('/notebook/comprar', methods=['POST'])
-@jwt_required()
-def create_notebook_list_in_cart():
-    request_data = request.get_json()
-    notebook_list = request_data['list_to_buy']
-
-    for item in notebook_list:
-        found = notebook.NotebookModel.find_by_product_id(item['notebook_id'])
-        if found:
-            new_cart = cart_item.CartItemModel(quantity=item['quantity'],
-                                                    notebook_id=found.id,
-                                                    user_id=request_data['user_id'])
-            new_cart.add_to_session()
-        else:
-            return {'message': 'Notebook {} nao existe no banco!'.format(item['notebook_id'])}, 403
-
-    new_cart.save_to_db()
-
-    return {'message': 'Notebooks inseridos com sucesso!'}, 200
 
 if __name__ == '__main__':
     from model.data import alchemy, ma, jwt
