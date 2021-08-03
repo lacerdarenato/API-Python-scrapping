@@ -1,0 +1,292 @@
+{
+	"info": {
+		"_postman_id": "01bcafa2-85a3-4276-a955-0940f8fdab7e",
+		"name": "API Scraping Notebooks",
+		"description": "# Introduction\nEsta api destina-se a coletar dados de notebooks na url https://webscraper.io/test-sites/e-commerce/allinone/computers/laptops\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nAlguns endpoints precisam de autenticação, que é fornecida por um token gerado pela própria API.\n\n# Error Codes\n**400 – Bad Request**\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "Criar um novo usuário",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"renato\",\n    \"email\": \"renato@eu.com\",\n    \"password\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/signup",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"signup"
+							]
+						},
+						"description": "Cria usuário para acessar api"
+					},
+					"response": []
+				},
+				{
+					"name": "Gerar token válido de Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"renato\",\n    \"email\": \"renato@eu.com\",\n    \"password\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/login",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"login"
+							]
+						},
+						"description": "cria token que da acesso ao usuário a alguns endpoinst"
+					},
+					"response": [
+						{
+							"name": "localhost:5000/login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"renato\",\n    \"email\": \"renato@eu.com\",\n    \"password\": \"12345678\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/login",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "305"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/2.0.1 Python/3.8.10"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 01 Aug 2021 17:29:26 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNzgzODk2NiwianRpIjoiNmQ3ZTNjYjEtZWZjNS00Mjk3LWFjZjgtZTdkZjZmOTA1ODUzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6InJlbmF0b0BldS5jb20iLCJuYmYiOjE2Mjc4Mzg5NjYsImV4cCI6MTYyNzgzOTg2Nn0.H9U1u5ovED1FgnfJr8F9vyh6W9Jx35uL-h6rQifBBKk\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Notebook",
+			"item": [
+				{
+					"name": "Pagina Inicial",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:5000",
+							"host": [
+								"localhost"
+							],
+							"port": "5000"
+						},
+						"description": "Tela de boas vindas"
+					},
+					"response": []
+				},
+				{
+					"name": "Executar bot Scrap",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNzk2OTkxOCwianRpIjoiNWExMGMxNzgtYjg0Yy00N2Q3LWFmZWMtMmMwNzcwNzM5YWZhIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6InJlbmF0b0BldS5jb20iLCJuYmYiOjE2Mjc5Njk5MTgsImV4cCI6MTYyODAwNTkxOH0.vHFo4gXzl7EUVr9DOf_0kKeb4wMHTnkF2e55oM-M9nE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:5000/scrap",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"scrap"
+							]
+						},
+						"description": "Executa scraping no site para coletar os dados dos notebooks e armazena em um json"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar todos no notebooks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:5000/notebook",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notebook"
+							]
+						},
+						"description": "Lista todas os notebooks coletados no scrap"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar detalhes do notebook",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:5000/notebook/10",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notebook",
+								"10"
+							]
+						},
+						"description": "Lista os dados de um notebook no banco de dados"
+					},
+					"response": []
+				},
+				{
+					"name": "Adicionar Lista de noteboos por usuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": 1,\n    \"list_to_buy\":[    \n                {\n                    \"notebook_id\": 548,\n                    \"quantity\": 10\n                },\n                {\n                    \"notebook_id\": 572,\n                    \"quantity\": 3\n                },\n                {\n                    \"notebook_id\": 569,\n                    \"quantity\": 100\n                }\n            ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/notebook/comprar",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notebook",
+								"comprar"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}

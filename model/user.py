@@ -7,14 +7,11 @@ class UserModel(alchemy.Model):
     name = alchemy.Column(alchemy.String(100), nullable=False)
     email = alchemy.Column(alchemy.String(100), nullable=False, unique=True)
     password = alchemy.Column(alchemy.String(110), nullable=False)
-    
-    #cart_id = alchemy.Column(alchemy.Integer, alchemy.ForeignKey('cart.id'))
 
-    def __init__(self, name, email, password): #cart_id
+    def __init__(self, name, email, password):
         self.name = name
         self.email = email
         self.password = password
-        #self.cart_id = cart_id 
     
     def json(self):
         return {'name': self.name, 'email': self.email, 'password': self.password}
