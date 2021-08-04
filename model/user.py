@@ -7,11 +7,13 @@ class UserModel(alchemy.Model):
     name = alchemy.Column(alchemy.String(100), nullable=False)
     email = alchemy.Column(alchemy.String(100), nullable=False, unique=True)
     password = alchemy.Column(alchemy.String(110), nullable=False)
+    admin = alchemy.Column(alchemy.Boolean, nullable=False)
 
-    def __init__(self, name, email, password):
+    def __init__(self, name, email, password, admin):
         self.name = name
         self.email = email
         self.password = password
+        self.admin = admin
     
     def json(self):
         return {'name': self.name, 'email': self.email, 'password': self.password}

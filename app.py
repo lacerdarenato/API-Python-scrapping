@@ -3,7 +3,7 @@ from model.data import alchemy
 from BotScraper import scraping
 from model import notebook, user, cart_item
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token, jwt_required
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from validate_email import validate_email
 from datetime import timedelta
 #from flask_restx import Api
@@ -123,11 +123,12 @@ def signup():
     name = request_data['name']
     email = request_data['email']
     password = request_data['password']
+    admin = False
     if validate_email(email):
         if user.UserModel.find_by_email(email):
             return {'message':'Email ja cadastrado'}, 200
         else:
-            new_user = user.UserModel(name, email, generate_password_hash(password))
+            new_user = user.UserModel(name, email, generate_password_hash(password), admin)
             new_user.save_to_db()
             return jsonify(new_user.json())
     else:
@@ -143,6 +144,31 @@ def login():
         return jsonify(access_token=access_token)
 
     return {"message":"Usuario ou senha invalidos"}, 401
+
+
+@app.route('/admin', methods=['POST'])
+def create_admin():
+    request_data = request.get_json()
+    name = request_data['name']
+    email = request_data['email']
+    password = request_data['password']
+    admin = True
+    if validate_email(email):
+        if user.UserModel.find_by_email(email):
+            return {'message':'Email ja cadastrado'}, 200
+        else:
+            new_user = user.UserModel(name, email, generate_password_hash(password), admin)
+            new_user.save_to_db()
+            return jsonify(new_user.json())
+    else:
+        return {'message':'Email invalido'}, 401
+
+@app.route('/admin/valido')
+@jwt_required()
+def is_admin():
+    email = get_jwt_identity()
+    current_user = user.UserModel.find_by_email(email)
+    return jsonify(is_admin=current_user.admin), 200
 
 if __name__ == '__main__':
     from model.data import alchemy, ma, jwt

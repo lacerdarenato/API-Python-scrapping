@@ -41,6 +41,37 @@
 					"response": []
 				},
 				{
+					"name": "Criar um novo admin",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"renato\",\n    \"email\": \"renato@eu.com\",\n    \"password\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/signup",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"signup"
+							]
+						},
+						"description": "Cria usuário para acessar api"
+					},
+					"response": []
+				},
+				{
 					"name": "Gerar token válido de Login",
 					"request": {
 						"method": "POST",
@@ -117,6 +148,37 @@
 							"body": "{\n    \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNzgzODk2NiwianRpIjoiNmQ3ZTNjYjEtZWZjNS00Mjk3LWFjZjgtZTdkZjZmOTA1ODUzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6InJlbmF0b0BldS5jb20iLCJuYmYiOjE2Mjc4Mzg5NjYsImV4cCI6MTYyNzgzOTg2Nn0.H9U1u5ovED1FgnfJr8F9vyh6W9Jx35uL-h6rQifBBKk\"\n}"
 						}
 					]
+				},
+				{
+					"name": "Verifica se usuário do token é admin",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"renato\",\n    \"email\": \"renato@eu.com\",\n    \"password\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/signup",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"signup"
+							]
+						},
+						"description": "Cria usuário para acessar api"
+					},
+					"response": []
 				}
 			]
 		},
@@ -260,6 +322,53 @@
 								"comprar"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remover um notebook",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyODAyMTc1NSwianRpIjoiNjNjOGE2NzctN2ZmMS00Y2NhLWFmOTQtNWFkOTk0YWQ1NWY3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6InJlbmF0b0BldS5jb20iLCJuYmYiOjE2MjgwMjE3NTUsImV4cCI6MTYyODA1Nzc1NX0.7S7IGu__6D8-6Y5iStyfAFEQ2ft_Jsm2-TpGyjPBRQQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/notebook/548",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"notebook",
+								"548"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar um notebook",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"productId\": 549,\n        \"title\": \"Lenovo V110-15IAP\",\n        \"price\": 356.49,\n        \"description\": \"Asus VivoBook 15 X540NA-GQ008T Chocolate Black, 15.6\\\" HD, Pentium N4200, 4GB, 500GB, Windows 10 Home, En kbd\",\n        \"review\": \"6 reviews\",\n        \"rating\": 5\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": null
 					},
 					"response": []
 				}
