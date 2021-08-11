@@ -1,3 +1,6 @@
+from typing import List
+
+from flask import json
 from model.data import alchemy
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 
@@ -44,6 +47,14 @@ class NotebookModel(alchemy.Model):
         newNotebook.review = self['review']
         
         alchemy.session.commit()
+
+    @classmethod
+    def list_all(cls):
+        list = cls.query.all()
+        json = []
+        for notebook in list:
+            json.append(notebook.json())
+        return json
         
     @classmethod
     def find_by_product_id(cls, productId):

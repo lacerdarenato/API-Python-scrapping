@@ -6,9 +6,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from validate_email import validate_email
 from datetime import timedelta
+from flask_cors import CORS
 #from flask_restx import Api
 
 app = Flask(__name__)
+CORS(app)
 '''api = Api(  app, 
             version='1.0',
             title='Api de notebooks', 
@@ -43,12 +45,13 @@ def home():
     return "API Funcionando", 200
 
 @app.route('/notebook',methods=['GET'])
-@jwt_required()
+#@jwt_required()
 def get_notebooks():
-    return jsonify(open_json())
+    result = notebook.NotebookModel.list_all()
+    return {"notebooks": result}, 200
 
 @app.route('/notebook/<int:productId>', methods=['GET'])
-@jwt_required()
+#@jwt_required()
 def get_notebook_by_product_id(productId):
     result = notebook.NotebookModel.find_by_product_id(productId)
     if result:
@@ -56,7 +59,7 @@ def get_notebook_by_product_id(productId):
     return {'message':'Notebook não encotrado'}, 404
 
 @app.route('/notebook/<int:productId>', methods=['DELETE'])
-@jwt_required()
+#@jwt_required()
 def del_notebook_by_product_id(productId):
     result = notebook.NotebookModel.find_by_product_id(productId)
     if result:
@@ -65,7 +68,7 @@ def del_notebook_by_product_id(productId):
     return {'message':'Notebook não encotrado'}, 404
 
 @app.route('/notebook/<int:productId>', methods=['PATCH'])
-@jwt_required()
+#@jwt_required()
 def change_notebook_by_product_id(productId):
     result = notebook.NotebookModel.find_by_product_id(productId)
     if result:
@@ -75,9 +78,12 @@ def change_notebook_by_product_id(productId):
     return {'message':'Notebook não encotrado'}, 404
 
 @app.route('/scrap')
-@jwt_required()
+#@jwt_required()
 def execute_bot():
-    return scraping('Lenovo')
+    scraping('Lenovo')
+    return persist_json()
+
+
 
 def persist_json():
     json = open_json()
@@ -94,11 +100,11 @@ def persist_json():
                                                     rating=notebookItem['rating'],
                                                     review=notebookItem['review'])
             newNotebook.save_to_db()
-
+    
     return {"message":"Json do scraping salvo no banco"}, 200
 
 @app.route('/notebook/comprar', methods=['POST'])
-@jwt_required()
+#@jwt_required()
 def create_notebook_list_in_cart():
     request_data = request.get_json()
     notebook_list = request_data['list_to_buy']
@@ -164,7 +170,7 @@ def create_admin():
         return {'message':'Email invalido'}, 401
 
 @app.route('/admin/valido')
-@jwt_required()
+#@jwt_required()
 def is_admin():
     email = get_jwt_identity()
     current_user = user.UserModel.find_by_email(email)

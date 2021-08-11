@@ -45,7 +45,6 @@ def scraping(searched):
 
         for i in range(0, len(elementsPrices)-1):
             notebooks.append({"productId": productIds[i], "title": titles[i], "price": prices[i], "description": descriptions[i], "review": reviews[i], "rating": 0}) #, "Ratings": ratings[i]
-
         notebookFiltrado = [notebook for notebook in notebooks if notebook['title'].count(searched)]
         notebookInOrder = sorted(notebookFiltrado, key=lambda notebook: notebook['price'])
 
@@ -55,7 +54,6 @@ def scraping(searched):
             json_file.close()
         except OSError as err:
             print("OS Error: {0}".format(err))
-
         return {"message":"Encontrado " + searched + " via scraping"}, 200
             
         
